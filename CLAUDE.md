@@ -187,6 +187,56 @@ The PF2e tactics game will be organized into these systems (to be added to `sour
 5. **Test:** Run debug build (`launch_debug.bat`)
 6. **Iterate:** Balance, polish, playtest
 
+## Version Control & Assets
+
+### Git LFS Configuration
+**This project uses Git LFS for large binary files.**
+
+**Tracked by LFS (see `.gitattributes`):**
+- Unigine packages: `*.ung`, `*.upackage`
+- Cache files: `*.cache`
+- 3D models: `*.fbx`, `*.blend`, `*.obj`
+- Textures: `*.psd`, `*.tga`, `*.exr`
+- Audio: `*.wav`, `*.ogg`, `*.mp3`
+- Video: `*.mp4`, `*.mov`
+- Worlds: `*.world`
+
+### Adding New Assets - IMPORTANT
+
+**When adding large asset files:**
+
+1. **Verify file type is in `.gitattributes`**
+   - If new file type (e.g., `.gltf`), add to `.gitattributes` first
+   - Format: `*.gltf filter=lfs diff=lfs merge=lfs -text`
+
+2. **Check before committing:**
+   ```bash
+   git lfs ls-files  # See what's tracked
+   git lfs status    # See what will be committed to LFS
+   ```
+
+3. **If file is large but NOT in LFS:**
+   - Add extension to `.gitattributes`
+   - Run: `git add .gitattributes`
+   - Then: `git add <your-large-file>`
+
+4. **Verify LFS is handling it:**
+   ```bash
+   git lfs ls-files  # Your file should appear here
+   ```
+
+**Rule of thumb:**
+- Files > 1MB → Should be in LFS
+- Source code, text, configs → Regular Git
+- Binary assets → LFS
+
+### What NOT to Commit
+Even with LFS, avoid committing:
+- Temporary/cache files (already in `.gitignore`)
+- Build artifacts (`bin/`, `lib/`, `cmake-build-*`)
+- IDE files (`.idea/`, `.vs/`)
+- Personal notes/scratch files
+
 ## Important Notes
 
 - All file paths in CMakeLists.txt should be relative to `source/` directory

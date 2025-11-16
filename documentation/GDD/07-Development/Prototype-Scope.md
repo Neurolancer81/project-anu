@@ -281,7 +281,117 @@ All player units defeated
 - Performance optimization
 - Playtest iteration
 
-**Total estimate:** 12 weeks (3 months) for functional prototype
+**Total estimate:** 10 weeks (2.5 months) for functional prototype
+*(Reduced from 12 weeks due to developer's existing Unigine experience)*
+
+---
+
+## Code Architecture
+
+### Component-Based Design
+
+**Unigine Component System:**
+Units will use Unigine's native Component system for modularity and editor integration.
+
+```cpp
+// Example: UnitComponent (attached to each unit node)
+class UnitComponent : public ComponentBase
+{
+    COMPONENT_DEFINE(UnitComponent, ComponentBase);
+    COMPONENT_INIT(init);
+    COMPONENT_UPDATE(update);
+
+    // Editor-exposed properties
+    PROP_PARAM(String, unit_id);
+    PROP_PARAM(Int, max_hp);
+    PROP_PARAM(Int, current_hp);
+    PROP_PARAM(Int, ac);
+    PROP_PARAM(Int, speed);
+
+    // Methods
+    void takeDamage(int amount);
+    void move(GridPosition target);
+    bool canReach(GridPosition target, int actions);
+};
+
+// Optional: SpellcasterComponent (for Wizard/Cleric units)
+class SpellcasterComponent : public ComponentBase
+{
+    COMPONENT_DEFINE(SpellcasterComponent, ComponentBase);
+
+    PROP_PARAM(String, spellcasting_class); // "wizard" or "cleric"
+    PROP_PARAM(Int, spell_dc);
+
+    Vector<String> prepared_spells;
+    Map<int, int> spell_slots; // rank -> remaining slots
+};
+```
+
+**Grid Management:**
+Grid will be a member of `AppWorldLogic`, not a Component (simpler for global access).
+
+```cpp
+// In AppWorldLogic.h
+class AppWorldLogic : public WorldLogic
+{
+public:
+    GridSystem grid;
+    TurnManager turn_manager;
+    CombatResolver combat;
+
+    int updatePhysics() override; // Game logic updates here (60 FPS)
+};
+```
+
+### Why Custom Pathfinding?
+
+**NOT using Unigine's built-in NavigationMesh:**
+- Unigine NavMesh is for continuous 3D pathfinding (characters walking smoothly)
+- Our game needs **discrete grid-based movement** with tactical rules:
+  - 5-5-10 diagonal costs (alternating 1/2 squares)
+  - Climb vs Stride action distinction
+  - Elevation-based movement costs
+  - Action point tracking (1-3 actions)
+
+**Custom A* implementation:**
+- Operates on square grid with discrete cells
+- Respects PF2e movement rules
+- Returns paths with action costs, not just distance
+
+### Code Organization
+
+**Standard C++ structure** (NO Public/Private header separation):
+```
+source/
+├── Core/
+│   ├── GameState.h/cpp          # Game state manager
+│   ├── TurnManager.h/cpp        # Initiative, turn order
+│   └── ActionSystem.h/cpp       # Action validation, MAP tracking
+├── Grid/
+│   ├── GridSystem.h/cpp         # Grid data structure
+│   ├── GridCell.h/cpp           # Cell properties (elevation, cover)
+│   ├── Pathfinding.h/cpp        # A* for grid
+│   └── MovementValidator.h/cpp  # Stride/Climb validation
+├── Components/
+│   ├── UnitComponent.h/cpp      # Base unit (HP, AC, stats)
+│   ├── SpellcasterComponent.h/cpp
+│   └── CombatantComponent.h/cpp # Initiative, actions
+├── Combat/
+│   ├── AttackResolver.h/cpp     # Attack rolls, MAP
+│   ├── DamageCalculator.h/cpp   # Damage, crits
+│   └── CoverSystem.h/cpp        # Cover detection, bonuses
+├── Spells/
+│   ├── SpellSystem.h/cpp        # Casting, targeting
+│   ├── SpellEffect.h/cpp        # Damage/healing/condition effects
+│   └── SpellData.h/cpp          # JSON loading
+├── UI/
+│   ├── GridRenderer.h/cpp       # Visual grid overlay
+│   ├── TacticalHUD.h/cpp        # Action buttons, HP, initiative
+│   └── TargetingUI.h/cpp        # Spell/attack targeting
+└── Data/
+    ├── DataLoader.h/cpp         # JSON parser
+    └── SpellDatabase.h/cpp      # Runtime spell data
+```
 
 ---
 
