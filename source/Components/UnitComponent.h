@@ -43,6 +43,12 @@ public:
     PROP_PARAM(Int, attack_bonus, 0);
     PROP_PARAM(String, weapon_damage, "1d6+2"); // Format: XdY+Z
 
+    // Turn system (managed by TurnManager)
+    PROP_PARAM(Int, initiative, 0);              // Initiative roll result (1d20 + Perception)
+    PROP_PARAM(Int, actions_remaining, 3);       // Actions left this turn (0-3)
+    PROP_PARAM(Int, current_map, 0);             // Multiple Attack Penalty (-5/-10 or -4/-8)
+    PROP_PARAM(Int, has_reaction, 1);            // 1 reaction per round (1 = available, 0 = spent)
+
     // Grid position (not exposed to editor, set by code)
     GridPosition grid_position;
 

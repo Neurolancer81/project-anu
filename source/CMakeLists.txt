@@ -58,6 +58,10 @@ add_executable(${target}
 		${CMAKE_CURRENT_LIST_DIR}/Components/UnitComponent.cpp
 		${CMAKE_CURRENT_LIST_DIR}/Components/UnitComponent.h
 
+		# Core Systems (Phase 2 - Turn System)
+		${CMAKE_CURRENT_LIST_DIR}/Core/TurnManager.cpp
+		${CMAKE_CURRENT_LIST_DIR}/Core/TurnManager.h
+
 )
 
 target_include_directories(${target}

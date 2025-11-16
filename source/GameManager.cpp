@@ -5,7 +5,7 @@
 
 // System includes
 #include "Grid/GridSystem.h"
-// #include "Core/TurnManager.h"
+#include "Core/TurnManager.h"
 // #include "Combat/CombatResolver.h"
 // #include "Spells/SpellSystem.h"
 // #include "UI/GridRenderer.h"
@@ -30,8 +30,10 @@ void GameManager::init() {
     // Create grid system (20x20 prototype grid)
     grid = new GridSystem(20, 20);
 
+    // Create turn manager
+    turn_manager = new TurnManager();
+
     // Create other systems (will be implemented as we build them)
-    // turn_manager = new TurnManager();
     // combat = new CombatResolver();
     // spells = new SpellSystem();
     // grid_renderer = new GridRenderer(grid);
@@ -49,7 +51,7 @@ void GameManager::shutdown() {
     // delete grid_renderer; // Not created yet
     // delete spells;        // Not created yet
     // delete combat;        // Not created yet
-    // delete turn_manager;  // Not created yet
+    delete turn_manager;
     delete grid;
 
     // Reset pointers
@@ -81,13 +83,19 @@ void GameManager::handleInput() {
 void GameManager::startCombat() {
     Unigine::Log::message("GameManager::startCombat() - Starting combat encounter\n");
     in_combat = true;
-    // TODO: Roll initiative
-    // TODO: Start first turn
+
+    // TODO: Get actual player and enemy units from the scene
+    // For now, just log that turn manager is ready
+    // turn_manager->startCombat(player_units, enemy_units);
 }
 
 void GameManager::endCombat() {
     Unigine::Log::message("GameManager::endCombat() - Ending combat encounter\n");
     in_combat = false;
-    // TODO: Clean up combat state
+
+    if (turn_manager) {
+        turn_manager->endCombat();
+    }
+
     // TODO: Show victory/defeat screen
 }
