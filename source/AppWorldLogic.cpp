@@ -1,9 +1,13 @@
 #include "AppWorldLogic.h"
 
+#include <UnigineLog.h>
+#include <UnigineGame.h>
+
 // World logic, it takes effect only when the world is loaded.
 // These methods are called right after corresponding world script's (UnigineScript) methods.
 
 AppWorldLogic::AppWorldLogic()
+	: game(nullptr)
 {}
 
 AppWorldLogic::~AppWorldLogic()
@@ -11,7 +15,13 @@ AppWorldLogic::~AppWorldLogic()
 
 int AppWorldLogic::init()
 {
-	// Write here code to be called on world initialization: initialize resources for your world scene during the world start.
+	Unigine::Log::message("AppWorldLogic::init() - Creating GameManager...\n");
+
+	// Create and initialize game manager
+	game = new GameManager();
+	game->init();
+
+	Unigine::Log::message("AppWorldLogic::init() - Complete\n");
 	return 1;
 }
 
@@ -21,7 +31,10 @@ int AppWorldLogic::init()
 
 int AppWorldLogic::update()
 {
-	// Write here code to be called before updating each render frame: specify all graphics-related functions you want to be called every frame while your application executes.
+	// Per-frame update: handle input
+	// Delegate to GameManager
+	game->handleInput();
+
 	return 1;
 }
 
@@ -33,8 +46,11 @@ int AppWorldLogic::postUpdate()
 
 int AppWorldLogic::updatePhysics()
 {
-	// Write here code to be called before updating each physics frame: control physics in your application and put non-rendering calculations.
-	// The engine calls updatePhysics() with the fixed rate (60 times per second by default) regardless of the FPS value.
+	// Fixed 60 FPS update: game logic
+	// Delegate to GameManager
+	float dt = Unigine::Game::getIFps(); // Inverse FPS (delta time)
+	game->update(dt);
+
 	// WARNING: do not create, delete or change transformations of nodes here, because rendering is already in progress.
 	return 1;
 }
@@ -45,7 +61,13 @@ int AppWorldLogic::updatePhysics()
 
 int AppWorldLogic::shutdown()
 {
-	// Write here code to be called on world shutdown: delete resources that were created during world script execution to avoid memory leaks.
+	Unigine::Log::message("AppWorldLogic::shutdown() - Destroying GameManager...\n");
+
+	// Delete game manager (which will clean up all game systems)
+	delete game;
+	game = nullptr;
+
+	Unigine::Log::message("AppWorldLogic::shutdown() - Complete\n");
 	return 1;
 }
 

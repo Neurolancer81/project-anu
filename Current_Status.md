@@ -38,9 +38,10 @@
 - ✅ **All design documents complete** (GDD, Prototype-Scope, Implementation-Guide, Technical-Architecture)
 - ✅ **Development environment ready** (CLion, Git, Git LFS)
 - ✅ **Clear implementation plan** (Phase 1 detailed checklist)
+- ✅ **Architecture decided** (GameManager pattern keeps App classes clean)
 - ✅ **No blockers** - can start Phase 1 immediately
 
-**First task:** Create `source/Grid/` folder and implement `GridSystem.h/cpp`
+**First task:** Create `source/GameManager.h/cpp` and update AppWorldLogic
 
 ---
 
@@ -127,13 +128,19 @@
 - [x] Create implementation documentation (Implementation-Guide.md, Technical-Architecture.md)
 
 ### Phase 1: Foundation (Weeks 1-2) ⬅️ READY TO START
-**Goal:** Grid data structures, unit components, turn management, grid visualization
+**Goal:** GameManager, grid data structures, unit components, turn management, grid visualization
+
+#### GameManager (Central coordinator)
+- [ ] Create `source/GameManager.h/cpp` (owns all game systems)
+- [ ] Implement GameManager::init(), update(), handleInput(), shutdown()
+- [ ] Update AppWorldLogic to own GameManager (thin coordinator)
+- [ ] Test: GameManager created, init() called successfully
 
 #### Grid System
 - [ ] Create `source/Grid/` folder
 - [ ] Implement `GridSystem.h/cpp` (grid data structure, cell queries)
 - [ ] Implement `GridCell.h/cpp` (cell properties: elevation, blocked, occupant)
-- [ ] Add grid to AppWorldLogic (20x20 grid for prototype)
+- [ ] Add GridSystem to GameManager (20x20 grid for prototype)
 - [ ] Test: Query cells, set elevation, mark blocked
 
 #### Unit Components
@@ -347,13 +354,15 @@
 6. ✅ Create implementation documentation (Implementation-Guide.md, Technical-Architecture.md)
 
 ### Next Session - Begin Phase 1
-1. Create `source/Grid/` folder
-2. Implement `GridSystem.h/cpp` (grid data structure)
-3. Implement `GridCell.h/cpp` (cell properties)
-4. Add grid to AppWorldLogic (20x20 prototype grid)
-5. Update CMakeLists.txt with new files
+1. Create `source/GameManager.h/cpp` (central game manager)
+2. Update AppWorldLogic to own GameManager
+3. Create `source/Grid/` folder
+4. Implement `GridSystem.h/cpp` (grid data structure)
+5. Implement `GridCell.h/cpp` (cell properties)
+6. Add GridSystem to GameManager (20x20 prototype grid)
+7. Update CMakeLists.txt with new files
 
-**Reference:** See `Implementation-Guide.md` for detailed Phase 1 code examples
+**Reference:** See `Implementation-Guide.md` for detailed GameManager pattern and Phase 1 code examples
 
 ---
 

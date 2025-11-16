@@ -1,5 +1,6 @@
 #include "AppSystemLogic.h"
 #include <UnigineComponentSystem.h>
+#include <UnigineLog.h>
 
 using namespace Unigine;
 
@@ -16,10 +17,13 @@ AppSystemLogic::~AppSystemLogic()
 
 int AppSystemLogic::init()
 {
-	// initialization for c++ component system
+	Log::message("AppSystemLogic::init() - Initializing component system...\n");
+
+	// Initialize C++ component system
+	// Components with REGISTER_COMPONENT() macro register automatically
 	ComponentSystem::get()->initialize();
 
-	// Write here code to be called on engine initialization.
+	Log::message("AppSystemLogic::init() - Complete\n");
 	return 1;
 }
 

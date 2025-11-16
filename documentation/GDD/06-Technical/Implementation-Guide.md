@@ -55,7 +55,11 @@ add_executable(${target}
     ${CMAKE_CURRENT_LIST_DIR}/AppWorldLogic.h
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 
-    # NEW: Grid system files
+    # NEW: GameManager
+    ${CMAKE_CURRENT_LIST_DIR}/GameManager.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/GameManager.h
+
+    # Grid system files
     ${CMAKE_CURRENT_LIST_DIR}/Grid/GridSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Grid/GridSystem.h
     ${CMAKE_CURRENT_LIST_DIR}/Grid/GridCell.cpp
@@ -68,9 +72,190 @@ add_executable(${target}
 
 ---
 
+## Architecture: GameManager Pattern
+
+To keep `AppWorldLogic` clean, all game systems are owned by a central `GameManager` class.
+
+### GameManager Structure
+
+**Create:** `source/GameManager.h` and `GameManager.cpp`
+
+```cpp
+// GameManager.h
+#pragma once
+#include "Grid/GridSystem.h"
+#include "Core/TurnManager.h"
+#include "Combat/CombatResolver.h"
+#include "Spells/SpellSystem.h"
+#include "UI/GridRenderer.h"
+
+class GameManager {
+public:
+    GameManager();
+    ~GameManager();
+
+    // Initialization
+    void init();
+    void shutdown();
+
+    // Update loops
+    void update(float dt);        // Game logic (called from updatePhysics)
+    void handleInput();           // Input handling (called from update)
+
+    // Systems (public for access from UI, debug, etc.)
+    GridSystem* grid;
+    TurnManager* turn_manager;
+    CombatResolver* combat;
+    SpellSystem* spells;
+    GridRenderer* grid_renderer;
+
+    // Game state
+    bool isInCombat() const { return in_combat; }
+    void startCombat();
+    void endCombat();
+
+private:
+    bool in_combat;
+};
+```
+
+```cpp
+// GameManager.cpp
+#include "GameManager.h"
+
+GameManager::GameManager()
+    : grid(nullptr)
+    , turn_manager(nullptr)
+    , combat(nullptr)
+    , spells(nullptr)
+    , grid_renderer(nullptr)
+    , in_combat(false)
+{
+}
+
+GameManager::~GameManager() {
+    shutdown();
+}
+
+void GameManager::init() {
+    // Create systems
+    grid = new GridSystem(20, 20); // 20x20 prototype grid
+    turn_manager = new TurnManager();
+    combat = new CombatResolver();
+    spells = new SpellSystem();
+    grid_renderer = new GridRenderer(grid);
+
+    // Initialize subsystems
+    grid_renderer->createGridVisuals();
+
+    Unigine::Log::message("GameManager initialized\n");
+}
+
+void GameManager::shutdown() {
+    delete grid_renderer;
+    delete spells;
+    delete combat;
+    delete turn_manager;
+    delete grid;
+}
+
+void GameManager::update(float dt) {
+    if (!in_combat) return;
+
+    // Update turn system
+    // Update AI
+    // etc.
+}
+
+void GameManager::handleInput() {
+    // Process mouse clicks, keyboard input
+}
+
+void GameManager::startCombat() {
+    in_combat = true;
+    // Roll initiative, start first turn
+}
+
+void GameManager::endCombat() {
+    in_combat = false;
+    // Clean up combat state
+}
+```
+
+### AppWorldLogic Integration
+
+**Update:** `source/AppWorldLogic.h` and `AppWorldLogic.cpp`
+
+```cpp
+// AppWorldLogic.h
+#pragma once
+#include <UnigineWorldLogic.h>
+#include "GameManager.h"
+
+class AppWorldLogic : public Unigine::WorldLogic {
+public:
+    AppWorldLogic();
+    ~AppWorldLogic() override;
+
+    int init() override;
+    int update() override;
+    int updatePhysics() override;
+    int shutdown() override;
+
+    // Game manager owns all systems
+    GameManager* game;
+};
+```
+
+```cpp
+// AppWorldLogic.cpp
+#include "AppWorldLogic.h"
+
+AppWorldLogic::AppWorldLogic() : game(nullptr) {
+}
+
+AppWorldLogic::~AppWorldLogic() {
+}
+
+int AppWorldLogic::init() {
+    // Create and initialize game manager
+    game = new GameManager();
+    game->init();
+
+    Unigine::Log::message("AppWorldLogic initialized\n");
+    return 1;
+}
+
+int AppWorldLogic::update() {
+    // Per-frame updates (input, UI)
+    game->handleInput();
+    return 1;
+}
+
+int AppWorldLogic::updatePhysics() {
+    // Fixed 60 FPS game logic
+    float dt = Unigine::Game::getIFps(); // Inverse FPS (delta time)
+    game->update(dt);
+    return 1;
+}
+
+int AppWorldLogic::shutdown() {
+    delete game;
+    return 1;
+}
+```
+
+**Benefits:**
+- AppWorldLogic stays minimal (just owns GameManager)
+- All game logic lives in GameManager hierarchy
+- Easy to test GameManager independently
+- Clear separation: Unigine layer vs game logic
+
+---
+
 ## Phase 1: Foundation (Weeks 1-2)
 
-**Goal:** Grid data structures, basic unit representation, turn management, grid visualization.
+**Goal:** GameManager, grid data structures, unit components, turn management, grid visualization.
 
 ### 1.1 Grid System
 
@@ -321,36 +506,30 @@ private:
 - Use `setMaterial()` to color cells (reachable = green, blocked = red)
 - Parent all grid nodes to a single root node for easy toggling
 
-**In AppWorldLogic:**
+**GameManager owns the grid:**
 
 ```cpp
-// AppWorldLogic.h
-class AppWorldLogic : public Unigine::WorldLogic {
+// GameManager.h (already created above)
+class GameManager {
 public:
-    GridSystem grid;
-    TurnManager turn_manager;
-    GridRenderer* grid_renderer;
-
-    int init() override;
-    int updatePhysics() override; // Game logic goes here
+    GridSystem* grid;
+    // ... other systems
 };
 
-// AppWorldLogic.cpp
-int AppWorldLogic::init() {
-    // Create 20x20 grid for prototype
-    grid = GridSystem(20, 20);
-
-    // Create visual grid
-    grid_renderer = new GridRenderer(&grid);
+// In GameManager::init()
+void GameManager::init() {
+    grid = new GridSystem(20, 20); // Created in GameManager
+    grid_renderer = new GridRenderer(grid);
     grid_renderer->createGridVisuals();
-
-    return 1;
 }
+```
 
-int AppWorldLogic::updatePhysics() {
-    // Fixed 60 FPS update
-    // Game logic updates here (turn management, etc.)
-    return 1;
+**Access from AppWorldLogic:**
+
+```cpp
+// AppWorldLogic can access grid through game pointer
+void someFunction() {
+    GridCell* cell = game->grid->getCell(5, 10);
 }
 ```
 
@@ -826,15 +1005,19 @@ int TurnManager::getCurrentMAPPenalty() {
 ### Input Handling
 
 ```cpp
-// In AppWorldLogic::update() - per frame
-int AppWorldLogic::update() {
+// In GameManager::handleInput() - called from AppWorldLogic::update()
+void GameManager::handleInput() {
     // Mouse click to select unit
     if (Input::isMouseButtonDown(Input::MOUSE_BUTTON_LEFT)) {
         // Raycast from camera to world
         // Check if hit a unit node
         // Set as selected unit
     }
+}
 
+// AppWorldLogic delegates to GameManager
+int AppWorldLogic::update() {
+    game->handleInput(); // GameManager handles all input
     return 1;
 }
 ```
@@ -842,14 +1025,26 @@ int AppWorldLogic::update() {
 ### GUI for Actions
 
 ```cpp
-// Create WidgetButton for actions
-WidgetButtonPtr stride_button = WidgetButton::create("Stride (1 action)");
-stride_button->setCallback(Gui::CLICKED, MakeCallback(this, &AppWorldLogic::onStrideClicked));
+// In GameManager (owns UI callbacks)
+class GameManager {
+public:
+    void onStrideClicked();
+    void onStrikeClicked();
+    void onCastSpellClicked();
 
-void AppWorldLogic::onStrideClicked() {
-    if (selected_unit && turn_manager.canTakeAction()) {
-        // Show movement range
-        // Wait for player to click destination
+private:
+    UnitComponent* selected_unit;
+};
+
+// Create WidgetButton for actions (in GameManager or UI system)
+WidgetButtonPtr stride_button = WidgetButton::create("Stride (1 action)");
+stride_button->setCallback(Gui::CLICKED, MakeCallback(this, &GameManager::onStrideClicked));
+
+void GameManager::onStrideClicked() {
+    if (selected_unit && turn_manager->canTakeAction()) {
+        // Show movement range via grid_renderer
+        auto reachable = selected_unit->getStrideRange();
+        grid_renderer->showReachableCells(reachable, vec4(0, 1, 0, 0.5));
     }
 }
 ```

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<property version="2.20.0.0" name="UnitComponent" manual="1" parent_name="node_base">
+	<parameter name="unit_id" type="string"/>
+	<parameter name="unit_name" type="string"/>
+	<parameter name="level" type="int">1</parameter>
+	<parameter name="max_hp" type="int">10</parameter>
+	<parameter name="current_hp" type="int">10</parameter>
+	<parameter name="armor_class" type="int">10</parameter>
+	<parameter name="speed" type="int">25</parameter>
+	<parameter name="strength" type="int">10</parameter>
+	<parameter name="dexterity" type="int">10</parameter>
+	<parameter name="constitution" type="int">10</parameter>
+	<parameter name="intelligence" type="int">10</parameter>
+	<parameter name="wisdom" type="int">10</parameter>
+	<parameter name="charisma" type="int">10</parameter>
+	<parameter name="fortitude_save" type="int">0</parameter>
+	<parameter name="reflex_save" type="int">0</parameter>
+	<parameter name="will_save" type="int">0</parameter>
+	<parameter name="attack_bonus" type="int">0</parameter>
+	<parameter name="weapon_damage" type="string">1d6+2</parameter>
+</property>

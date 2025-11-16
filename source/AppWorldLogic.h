@@ -4,6 +4,8 @@
 #include <UnigineLogic.h>
 #include <UnigineStreams.h>
 
+#include "GameManager.h"
+
 class AppWorldLogic : public Unigine::WorldLogic
 {
 
@@ -21,6 +23,9 @@ public:
 
 	int save(const Unigine::StreamPtr &stream) override;
 	int restore(const Unigine::StreamPtr &stream) override;
+
+	// Game manager owns all game systems
+	GameManager* game;
 };
 
 #endif // __APP_WORLD_LOGIC_H__

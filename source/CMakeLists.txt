@@ -45,6 +45,18 @@ add_executable(${target}
 		${CMAKE_CURRENT_LIST_DIR}/AppWorldLogic.h
 		${CMAKE_CURRENT_LIST_DIR}/main.cpp
 
+		# GameManager (Phase 1)
+		${CMAKE_CURRENT_LIST_DIR}/GameManager.cpp
+		${CMAKE_CURRENT_LIST_DIR}/GameManager.h
+
+		# Grid System (Phase 1)
+		${CMAKE_CURRENT_LIST_DIR}/Grid/GridSystem.cpp
+		${CMAKE_CURRENT_LIST_DIR}/Grid/GridSystem.h
+		${CMAKE_CURRENT_LIST_DIR}/Grid/GridCell.h
+
+		# Components (Phase 1)
+		${CMAKE_CURRENT_LIST_DIR}/Components/UnitComponent.cpp
+		${CMAKE_CURRENT_LIST_DIR}/Components/UnitComponent.h
 
 )
 

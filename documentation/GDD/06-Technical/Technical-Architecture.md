@@ -70,11 +70,11 @@ High-level technical architecture for ProjectAnu, documenting system design, dat
 
 **WorldLogic** (`AppWorldLogic`)
 - **Lifecycle:** While a world/level is loaded
-- **Purpose:** Game logic, entities, combat management
+- **Purpose:** Thin coordinator, delegates to GameManager
 - **Key responsibilities:**
-  - Own `GridSystem`, `TurnManager`, `CombatResolver`
-  - Game state updates in `updatePhysics()` (fixed 60 FPS)
-  - Input handling in `update()` (per render frame)
+  - Own `GameManager` (which owns all game systems)
+  - Delegate game state updates to `GameManager::update()` in `updatePhysics()` (fixed 60 FPS)
+  - Delegate input to `GameManager::handleInput()` in `update()` (per render frame)
   - World save/load
 
 **EditorLogic** (`AppEditorLogic`)
@@ -96,11 +96,11 @@ High-level technical architecture for ProjectAnu, documenting system design, dat
 - `Pathfinder` - A* pathfinding with PF2e movement rules
 - `MovementValidator` - Validates Stride/Climb actions
 
-**Ownership:** Member of `AppWorldLogic`
+**Ownership:** Member of `GameManager` (owned by `AppWorldLogic`)
 
 **Data flow:**
 ```
-Player clicks unit → Input handler → AppWorldLogic
+Player clicks unit → Input handler → GameManager::handleInput()
                                           ↓
                         Query GridSystem for reachable cells
                                           ↓
@@ -331,28 +331,33 @@ Spend action(s) and spell slot
 ### Class Relationships
 
 ```
-AppWorldLogic
-├── owns GridSystem
-│   ├── contains Vector<GridCell>
-│   └── used by Pathfinder
-├── owns TurnManager
-│   ├── contains Vector<InitiativeEntry>
-│   └── tracks UnitComponent pointers
-├── owns CombatResolver
-│   └── uses AttackResolver, DamageCalculator
-└── owns SpellSystem
-    ├── owns SpellDatabase
-    └── uses SpellEffect
+AppWorldLogic (Unigine layer)
+└── owns GameManager
+    ├── owns GridSystem
+    │   ├── contains Vector<GridCell>
+    │   └── used by Pathfinder
+    ├── owns TurnManager
+    │   ├── contains Vector<InitiativeEntry>
+    │   └── tracks UnitComponent pointers
+    ├── owns CombatResolver
+    │   └── uses AttackResolver, DamageCalculator
+    ├── owns SpellSystem
+    │   ├── owns SpellDatabase
+    │   └── uses SpellEffect
+    └── owns GridRenderer
+        ├── references GridSystem
+        └── creates ObjectMeshDynamic nodes (visual grid)
 
 UnitComponent (ComponentBase)
 ├── has GridPosition
-├── references TurnManager (for actions)
+├── references TurnManager (for actions via GameManager)
 └── optional SpellcasterComponent sibling
-
-GridRenderer
-├── references GridSystem
-└── creates ObjectMeshDynamic nodes (visual grid)
 ```
+
+**Benefits:**
+- AppWorldLogic stays minimal (only owns GameManager)
+- GameManager encapsulates all game logic
+- Clear separation: Unigine API layer vs game logic layer
 
 ---
 
@@ -371,7 +376,7 @@ GridRenderer
       ↓
 5. Player selects action (e.g., "Strike")
       ↓
-6. Input handler → AppWorldLogic::onActionClicked()
+6. Input handler → GameManager::onActionClicked()
       ↓
 7. Validate action: TurnManager::canTakeAction()?
       ↓
@@ -444,8 +449,9 @@ GridRenderer
 source/
 ├── main.cpp                      # Entry point
 ├── AppSystemLogic.cpp/.h         # Engine initialization
-├── AppWorldLogic.cpp/.h          # Game logic layer
+├── AppWorldLogic.cpp/.h          # Thin coordinator, owns GameManager
 ├── AppEditorLogic.cpp/.h         # Editor tools
+├── GameManager.cpp/.h            # Central game manager, owns all systems
 │
 ├── Core/
 │   ├── GameState.h/cpp           # Game state manager
@@ -502,7 +508,11 @@ add_executable(${target}
     ${CMAKE_CURRENT_LIST_DIR}/AppWorldLogic.cpp
     ${CMAKE_CURRENT_LIST_DIR}/AppWorldLogic.h
 
-    # NEW: Grid system
+    # GameManager
+    ${CMAKE_CURRENT_LIST_DIR}/GameManager.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/GameManager.h
+
+    # Grid system
     ${CMAKE_CURRENT_LIST_DIR}/Grid/GridSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Grid/GridSystem.h
     ${CMAKE_CURRENT_LIST_DIR}/Grid/Pathfinding.cpp
