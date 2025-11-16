@@ -1,0 +1,141 @@
+# Unigine SDK managed folders (regenerated from SDK)
+bin/
+lib/
+include/
+utils/
+
+# CMake build directories
+cmake-build-*/
+build/
+out/
+
+# Visual Studio / MSBuild
+.vs/
+*.vcxproj.user
+*.suo
+*.sln.docstates
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.opendb
+
+# CLion / IntelliJ IDEA
+.idea/
+cmake-build-debug/
+cmake-build-release/
+cmake-build-relwithdebinfo/
+cmake-build-minsizerel/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Compiled Object files
+*.obj
+*.o
+*.lo
+*.slo
+*.ko
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Unigine runtime/cache files
+*.cache
+*.node_cache
+*.world_cache
+*.mat_cache
+*.shader_cache
+*.blob_cache
+*.texture_cache
+.runtimes/
+data/.runtimes/
+
+# Unigine log files
+*.log
+log.txt
+log.html
+
+# Unigine temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Obsidian workspace (user-specific)
+documentation/.obsidian/workspace.json
+documentation/.obsidian/workspace
+documentation/.obsidian/*.json
+!documentation/.obsidian/app.json
+!documentation/.obsidian/appearance.json
+
+# Keep .obsidian config but not workspace
+documentation/.obsidian/workspace-mobile.json
+documentation/.obsidian/graph.json
+
+# Backup files
+*.backup
+*~
+
+# Package files (if using any package managers)
+node_modules/
+package-lock.json
+
+# Python (if using any python tools)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Large asset files (consider Git LFS for these)
+# Uncomment if you want to exclude large binaries:
+# *.ung
+# *.upackage
+# *.fbx
+# *.mp4
+# *.wav
+# *.ogg
+
+# Keep these important files
+!.gitignore
+!README.md
+!CLAUDE.md
+!Current_Status.md
