@@ -6,10 +6,7 @@
 
 #include <UnigineVector.h>
 #include <UniginePtr.h>
-
-namespace Unigine {
-    class Node;
-}
+#include <UnigineNode.h>
 
 class UnitComponent;
 

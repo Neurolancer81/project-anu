@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<property version="2.20.0.0" name="GridConfigComponent" manual="1" parent_name="node_base">
+	<parameter name="grid_width" type="int">20</parameter>
+	<parameter name="grid_height" type="int">20</parameter>
+	<parameter name="cell_size" type="float">1</parameter>
+	<parameter name="elevation_height" type="float">1</parameter>
+	<parameter name="tile_coverage" type="float">0.9</parameter>
+	<parameter name="tile_height_offset" type="float">0.1</parameter>
+	<parameter name="tile_thickness" type="float">0.01</parameter>
+	<parameter name="grid_color" type="vec4">0.400000 0.400000 0.400000 0.700000</parameter>
+	<parameter name="highlight_color" type="vec4">0.000000 0.800000 1.000000 0.800000</parameter>
+</property>

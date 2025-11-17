@@ -57,10 +57,16 @@ add_executable(${target}
 		# Components (Phase 1)
 		${CMAKE_CURRENT_LIST_DIR}/Components/UnitComponent.cpp
 		${CMAKE_CURRENT_LIST_DIR}/Components/UnitComponent.h
+		${CMAKE_CURRENT_LIST_DIR}/Components/GridConfigComponent.cpp
+		${CMAKE_CURRENT_LIST_DIR}/Components/GridConfigComponent.h
 
-		# Core Systems (Phase 2 - Turn System)
+		# Core Systems (Phase 1 - Turn System)
 		${CMAKE_CURRENT_LIST_DIR}/Core/TurnManager.cpp
 		${CMAKE_CURRENT_LIST_DIR}/Core/TurnManager.h
+
+		# UI Systems (Phase 1 - Grid Rendering)
+		${CMAKE_CURRENT_LIST_DIR}/UI/GridRenderer.cpp
+		${CMAKE_CURRENT_LIST_DIR}/UI/GridRenderer.h
 
 )
 

@@ -18,4 +18,8 @@
 	<parameter name="will_save" type="int">0</parameter>
 	<parameter name="attack_bonus" type="int">0</parameter>
 	<parameter name="weapon_damage" type="string">1d6+2</parameter>
+	<parameter name="initiative" type="int">0</parameter>
+	<parameter name="actions_remaining" type="int">3</parameter>
+	<parameter name="current_map" type="int">0</parameter>
+	<parameter name="has_reaction" type="int">1</parameter>
 </property>

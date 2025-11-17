@@ -4,7 +4,7 @@
 #include <UnigineNode.h>
 #include <UnigineLog.h>
 #include <UnigineGame.h>
-#include <cstdlib>  // For rand()
+#include <random>
 
 TurnManager::TurnManager()
     : combat_active(false)
@@ -257,11 +257,20 @@ int TurnManager::rollInitiativeForUnit(UnitComponent* unit) const {
     // Initiative = 1d20 + Perception modifier
     // For now, use Wisdom modifier as Perception (PF2e default)
     int perception_mod = unit->getWisdomMod();
-    int d20_roll = (rand() % 20) + 1;  // 1d20
+
+    // Use C++11 random for better quality RNG
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_int_distribution<> d20(1, 20);
+
+    int d20_roll = d20(gen);  // 1d20
     int initiative = d20_roll + perception_mod;
 
     // Store initiative in unit component
     unit->initiative = initiative;
+
+    Unigine::Log::message("  %s: rolled %d + %d (Perception) = %d\n",
+        unit->unit_name.get(), d20_roll, perception_mod, initiative);
 
     return initiative;
 }

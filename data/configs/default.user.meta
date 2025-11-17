@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.20.0.0">
+	<guid>29e3d97718d6dcdf52bb8e82f9cde0c3cfd8eb80</guid>
+	<type>file</type>
+	<hash>8de08c2f</hash>
+	<runtimes>
+		<runtime id="29e3d97718d6dcdf52bb8e82f9cde0c3cfd8eb80" name="default.user" link="0"/>
+	</runtimes>
+</asset>

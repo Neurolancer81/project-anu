@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.20.0.0">
+	<guid>9ab86d334b6d6e858927784fa7c927a8dd88bb80</guid>
+	<type>property</type>
+	<hash>dc54cb85</hash>
+	<runtimes>
+		<runtime id="9ab86d334b6d6e858927784fa7c927a8dd88bb80" name="GridConfigComponent" link="0" type="4"/>
+	</runtimes>
+</asset>
