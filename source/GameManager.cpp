@@ -10,6 +10,7 @@
 #include "Core/TurnManager.h"
 #include "UI/GridRenderer.h"
 #include "Components/GridConfigComponent.h"
+#include "Input/SelectionSystem.h"
 // #include "Combat/CombatResolver.h"
 // #include "Spells/SpellSystem.h"
 
@@ -19,6 +20,7 @@ GameManager::GameManager()
     , combat(nullptr)
     , spells(nullptr)
     , grid_renderer(nullptr)
+    , selection(nullptr)
     , in_combat(false)
 {
 }
@@ -57,6 +59,10 @@ void GameManager::init() {
     grid_renderer = new GridRenderer(grid, grid_config);
     grid_renderer->createGridVisuals();
 
+    // Create selection system
+    selection = new Unigine::SelectionSystem();
+    selection->init();
+
     // Create other systems (will be implemented as we build them)
     // combat = new CombatResolver();
     // spells = new SpellSystem();
@@ -68,6 +74,7 @@ void GameManager::shutdown() {
     Unigine::Log::message("GameManager::shutdown() - Cleaning up game systems...\n");
 
     // Delete systems in reverse order
+    delete selection;
     delete grid_renderer;
     // delete spells;        // Not created yet
     // delete combat;        // Not created yet
@@ -75,6 +82,7 @@ void GameManager::shutdown() {
     delete grid;
 
     // Reset pointers
+    selection = nullptr;
     grid_renderer = nullptr;
     spells = nullptr;
     combat = nullptr;
@@ -95,7 +103,12 @@ void GameManager::update(float dt) {
 
 void GameManager::handleInput() {
     // Process player input (called per-frame from AppWorldLogic::update)
-    // TODO: Mouse clicks for unit selection
+
+    // Update selection system (handles mouse picking and unit selection)
+    if (selection) {
+        selection->update();
+    }
+
     // TODO: Keyboard input
     // TODO: UI button callbacks
 }

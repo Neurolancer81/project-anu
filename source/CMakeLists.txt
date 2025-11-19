@@ -68,6 +68,10 @@ add_executable(${target}
 		${CMAKE_CURRENT_LIST_DIR}/UI/GridRenderer.cpp
 		${CMAKE_CURRENT_LIST_DIR}/UI/GridRenderer.h
 
+		# Input Systems (Phase 2 - Unit Selection)
+		${CMAKE_CURRENT_LIST_DIR}/Input/SelectionSystem.cpp
+		${CMAKE_CURRENT_LIST_DIR}/Input/SelectionSystem.h
+
 )
 
 target_include_directories(${target}

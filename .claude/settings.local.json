@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmake --build:*)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" ProjectAnu.sln /p:Configuration=Debug /t:Build)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" ProjectAnu.sln /p:Configuration=Debug /nologo)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" \"D:/Unigine/ProjectAnu/source/build/ProjectAnu.vcxproj\" -p:Configuration=Debug -nologo)",
+      "Bash(cmake:*)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" \"D:/Unigine/ProjectAnu/source/build/ProjectAnu.vcxproj\" -p:Configuration=Debug -t:Rebuild -nologo)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

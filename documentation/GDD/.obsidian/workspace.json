@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "00-Overview/Game-Vision.md",
+                "file": "GDD-Structure.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Game-Vision"
+              "title": "GDD-Structure"
             }
           }
         ]
@@ -183,11 +183,27 @@
       "bases:Create new base": false
     }
   },
-  "active": "829e39e58f3cee51",
+  "active": "9edd3c69dcea5c9d",
   "lastOpenFiles": [
-    "07-Development/Prototype-Scope.md",
-    "07-Development/Prototype-Scope.md.tmp.30832.1763300949121",
+    "04-Implementation/Phase-2-Input-Selection.md.tmp.11432.1763518707267",
+    "Current_Status.md.tmp.11432.1763518670857",
+    "Current_Status.md.tmp.11432.1763518637215",
+    "04-Implementation/Phase-2-Input-Selection.md",
+    "04-Implementation/Phase-2-Input-Selection.md.tmp.11432.1763517606664",
+    "Current_Status.md",
+    "Current_Status.md.tmp.11432.1763517449109",
     "00-Overview/00-Overview.md",
-    "_template.md"
+    "00-Overview/Game-Vision.md",
+    "01-Core-Mechanics/Turn-System.md",
+    "01-Core-Mechanics/Movement-Grid-System.md",
+    "02-Systems/Character-Progression.md",
+    "07-Development/Prototype-Scope.md",
+    "06-Technical/Technical-Architecture.md",
+    "06-Technical/Implementation-Guide.md",
+    "04-Implementation/Phase-1-Foundation.md",
+    "03-Meta-Layer/Campaign-Structure.md",
+    "_template.md",
+    "GDD-Structure.md",
+    "07-Development/Prototype-Scope.md.tmp.30832.1763300949121"
   ]
 }

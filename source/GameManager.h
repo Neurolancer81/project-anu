@@ -3,6 +3,7 @@
 // Keeps AppWorldLogic clean by encapsulating all game logic
 
 #pragma once
+#include "Input/SelectionSystem.h"
 
 // Forward declarations (full includes in .cpp)
 class GridSystem;
@@ -30,6 +31,7 @@ public:
     CombatResolver* combat;
     SpellSystem* spells;
     GridRenderer* grid_renderer;
+    Unigine::SelectionSystem* selection;
 
     // Game state
     bool isInCombat() const { return in_combat; }
